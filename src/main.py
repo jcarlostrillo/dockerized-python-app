@@ -40,47 +40,31 @@ def get_requests():
 def add_request():    
     request_candidate = Request(request.remote_addr, request.path, socket.gethostname(), datetime.now())
 
-    # persist exam
+    # Persist request
     session = Session()
     session.add(request_candidate)
     session.commit()
 
-    # return created exam
+    # Return created exam
     crated_request = RequestSchema().dump(request_candidate)
     session.close()
     return jsonify(crated_request), 201
 
-@app.route("/")
+@app.route("/requests/file")
 def index():
-    ip_address = request.remote_addr
-    path = request.path
-    hostname_container = socket.gethostname()
-    now = datetime.now()
-    time = now.strftime("%m/%d/%Y, %H:%M:%S")
+    request_candidate = Request(request.remote_addr, request.path, socket.gethostname(), datetime.now())
 
-    writeToFile(ip_address, path, hostname_container, time)
-
-   
-    conn = postgress_connection()
-    conn.insert(ip_address, path, hostname_container, time)
-    records = conn.selectAll()
-    conn.close()
-    return jsonify(records)
-
-@app.route("/hi")
-def who():
-    return "Who are you?"
-
-@app.route("/hi/<username>")
-def greet(username):
-    return f"Hi there, {username}!"
+    # Persist in a file
+    writeToFile(request_candidate.ip, request_candidate.path, request_candidate.host, request_candidate.requested_at)
+ 
+    return render_template("index.html", **locals())
 
 def writeToFile(ip_address, path, hostname_container, time):
     f = open("/tmp/requests.txt", "a")
     f.write("IP Adress: " + ip_address + "\n")
     f.write("PATH: " + path  + "\n")
     f.write("Hostname: " + hostname_container + "\n")
-    f.write("Time: " + time + "\n")
+    f.write("Time: " + str(time) + "\n")
     f.write("--------------------------------------------------\n")
     f.close()
 

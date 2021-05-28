@@ -9,13 +9,13 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-  <title>Index</title>
+  <title>Request added to file</title>
 </head>
 
 <body>
   <div class="container">
     <div class="row align-items-start">
-      <h1>Welcome to the sample web app on Docker! (Python Version)</h1>
+      <h1>Simple request added to the file /tmp/requests.txt</h1>
     </div>
 
     <div class="row">
@@ -30,21 +30,14 @@
         </thead>
         <tbody>
           <tr>
-            <td>{{ip_address}}</td>       
-            <td>{{path}}</td>
-            <td>{{hostname_container}}</td>
-            <td>{{time}}</td>
-          </tr>
-          <tr>
-            <td>{{ip_address}}</td>       
-            <td>{{path}}</td>
-            <td>{{hostname_container}}</td>
-            <td>{{time}}</td>
+            <td>{{request_candidate.ip}}</td>       
+            <td>{{request_candidate.path}}</td>
+            <td>{{request_candidate.host}}</td>
+            <td>{{request_candidate.requested_at}}</td>
           </tr>
         </tbody>
       </table>
     </div>
-    {{records}}
   </div>
 
   <!-- Optional JavaScript -->
