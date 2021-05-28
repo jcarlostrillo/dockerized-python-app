@@ -1,0 +1,49 @@
+version: "2.3"
+
+services:
+  app:
+    image: ctrillo/uwsgi-nginx-flask:latest
+    build: 
+      context: .
+    networks:
+      - backend
+      - frontend
+    environment:
+      - PYTHONUNBUFFERED
+      - FLASK_DEBUG
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_HOST
+      - FLASK_APP
+    volumes:
+      - .:/app
+    ports:
+      - 5001:5000
+
+  pg:
+    image: postgres:9.6-alpine
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+    networks:
+      - backend
+    volumes:
+      - ./sql/create_table.sql:/docker-entrypoint-initdb.d/create-table.sql
+
+  client:
+    image: jfahrer/checker-u-dev-a3:latest
+    networks:
+      - backend
+    environment:
+      - POSTGRES_USER=demo
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=demo
+      - POSTGRES_HOST=pg
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
